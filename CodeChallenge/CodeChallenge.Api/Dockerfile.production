@@ -1,0 +1,26 @@
+# Base image
+FROM dtr.wpnops.net/docker/images/dotnet/core:runtime
+
+# It takes port information from CI release-time
+ARG CONTAINER_PORT
+ENV EXPOSED_PORT=$CONTAINER_PORT
+
+# Image description
+LABEL MANTAINER="cibot"
+LABEL PROJECT_NAME="CodeChallenge"
+LABEL PROJECT_NAMESPACE="version1"
+LABEL DOCKERFILE_DATE="2018-09-13"
+LABEL DOTNET_VERSION="2.2"
+
+# Project runtime configuration
+WORKDIR /app
+
+COPY publish .
+
+ENV ASPNETCORE_URLS http://*:$EXPOSED_PORT
+ENV ASPNETCORE_ENVIRONMENT Development
+
+EXPOSE $EXPOSED_PORT
+HEALTHCHECK --interval=5s --timeout=3s CMD curl -X GET http://localhost:5000
+
+ENTRYPOINT ["dotnet" , "CodeChallenge.Api.dll"]

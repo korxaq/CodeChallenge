@@ -1,0 +1,100 @@
+---
+stages:
+  - build
+  - test
+  - package
+  - release
+
+variables:
+  # Key file for access to Nexus packages repository
+  NUGET: >
+    <?xml version="1.0" encoding="utf-8"?>
+    <configuration>
+    <packageSources>
+      <add key="WPN_NUGET" value="$NEXUS_REPOSITORY" />
+      <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
+    </packageSources>
+    <disabledPackageSources>
+      <add key="nuget.org" value="true" />
+    </disabledPackageSources>
+    <packageRestore>
+      <add key="enabled" value="True" />
+      <add key="automatic" value="True" />
+    </packageRestore>
+    <bindingRedirects>
+      <add key="skip" value="False" />
+    </bindingRedirects>
+    <packageManagement>
+      <add key="format" value="0" />
+      <add key="disabled" value="False" />
+    </packageManagement>
+    <packageSourceCredentials>
+      <WPN_NUGET>
+        <add key="Username" value="$NEXUS_USERNAME" />
+        <add key="ClearTextPassword" value="$NEXUS_PASSWORD" />
+      </WPN_NUGET>
+    </packageSourceCredentials>
+    </configuration>
+
+build:linux:
+  stage: build
+  before_script:
+    - echo $NUGET > $CI_PROJECT_DIR/$CI_PROJECT_NAME/NuGet.Config
+  script:
+    - for csproj in $(find . -type f -name "*.csproj" | grep -v "Test"); do dotnet build $csproj --configfile $CI_PROJECT_NAME/NuGet.Config; done
+  artifacts:
+    untracked: true
+    name: "build-$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA"
+    paths: 
+      - $CI_PROJECT_DIR
+    expire_in: 15 minutes
+  tags:
+    - dotnet-core
+
+test:linux:
+  stage: test
+  script:
+    - for csproj in $(find . -type f -name "*.csproj" | grep "Test"); do dotnet test $csproj; done
+  tags:
+    - dotnet-core
+  dependencies:
+    - build:linux
+
+package:linux:prod:
+  stage: package
+  before_script:
+    - cd $CI_PROJECT_NAME
+    - echo $NUGET >  /$CI_PROJECT_DIR/$CI_PROJECT_NAME/NuGet.Config
+    - export ASPNETCORE_ENVIRONMENT=Production
+  script:
+    - dotnet publish -c Release -o publish
+  artifacts:
+    untracked: true
+    name: "package-$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA"
+    paths:
+      - $CI_PROJECT_DIR/$CI_PROJECT_NAME/$CI_PROJECT_NAME.Api/publish
+    expire_in: 15 minutes
+  tags:
+    - dotnet-core
+  dependencies:
+    - build:linux
+  only:
+    - master
+    - development
+
+release:linux:prod:
+  stage: release
+  before_script:
+    - cd $CI_PROJECT_NAME/$CI_PROJECT_NAME.Api
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD "$CI_REGISTRY_PROTOCOL://$CI_REGISTRY"
+    - docker build -f Dockerfile -t ${CI_PROJECT_NAME,,}:$CI_JOB_ID --no-cache .
+    - docker tag ${CI_PROJECT_NAME,,}:$CI_JOB_ID $CI_REGISTRY/${CI_PROJECT_NAMESPACE,,}/${CI_PROJECT_NAME,,}:${CI_COMMIT_REF_NAME}
+    - docker push $CI_REGISTRY/${CI_PROJECT_NAMESPACE,,}/${CI_PROJECT_NAME,,}:${CI_COMMIT_REF_NAME}
+  tags:
+    - shell
+  dependencies:
+    - package:linux:prod
+  only:
+    - master
+    - development
