@@ -8,5 +8,8 @@ namespace CodeChallenge.Common.MagicValues
     {
         public const string ALLOWED_ORIGINS = "AllowedOrigins";
         public const string ALLOW_FROM_CONFIGURED = "AllowFromConfigured";
+
+        // Error Messages
+        public const string INVALID_REQUEST = "Invalid Request";
     }
 }

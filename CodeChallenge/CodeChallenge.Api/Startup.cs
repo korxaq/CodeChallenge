@@ -8,10 +8,12 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using CodeChallenge.Api.Filters;
+using CodeChallenge.BLL;
 using CodeChallenge.Common.JsonConverter;
 using CodeChallenge.Common.MagicValues;
 using CodeChallenge.Common.Mapping;
 using CodeChallenge.DAL.Context;
+using CodeChallenge.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -109,22 +111,18 @@ namespace CodeChallenge.Api
         private void AddAutofacRegistrations(ContainerBuilder builder)
         {
             #region BLL
-            /*builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(CreditDebitBll)))
+            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(UserProjectsBll)))
                 .Where(t => t.Name.EndsWith("Bll"))
                 .AsImplementedInterfaces();
 
-            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(TransactionTypesGateway)))
-                .Where(t => t.Name.EndsWith("Gateway"))
-                .AsImplementedInterfaces();*/
             #endregion
 
             #region DAL
-            //builder.RegisterType<SkinsFinancialContext>().As<SkinsFinancialContext>().InstancePerLifetimeScope();
             builder.RegisterType<CodeChallengeContext>().As<CodeChallengeContext>().InstancePerLifetimeScope();
 
-            /*builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(SkinsTransactionHistoryRepository)))
+            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(CodeChallengeUserRepository)))
                 .Where(t => t.Name.Contains("Repository"))
-                .AsImplementedInterfaces();*/
+                .AsImplementedInterfaces();
             #endregion
 
             #region COMMON
