@@ -1,0 +1,9 @@
+[
+  {
+    "context": "/codeChallengeService",
+    "pathRewrite": { "^/codeChallengeService": "" },
+    "target": "http://localhost:30504/api",
+    "changeOrigin": true,
+    "secure": false
+  }
+]

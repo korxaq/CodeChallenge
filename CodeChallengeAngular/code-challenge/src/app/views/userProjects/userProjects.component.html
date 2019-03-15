@@ -1,0 +1,326 @@
+<toaster-container [toasterconfig]="globalVarsService.toasterConfig()"></toaster-container>
+<div class="wpn-loader" *ngIf="showLoader">
+  <div class="sk-circle">
+    <div class="sk-circle1 sk-child"></div>
+    <div class="sk-circle2 sk-child"></div>
+    <div class="sk-circle3 sk-child"></div>
+    <div class="sk-circle4 sk-child"></div>
+    <div class="sk-circle5 sk-child"></div>
+    <div class="sk-circle6 sk-child"></div>
+    <div class="sk-circle7 sk-child"></div>
+    <div class="sk-circle8 sk-child"></div>
+    <div class="sk-circle9 sk-child"></div>
+    <div class="sk-circle10 sk-child"></div>
+    <div class="sk-circle11 sk-child"></div>
+    <div class="sk-circle12 sk-child"></div>
+  </div>
+</div>
+<div class="animated fadeIn">
+  <div class="card">
+    <div class="card-header">
+      <div class="input-group">
+        <i class="fa fa-file-text-o fa-lg wpn-icon"></i>
+        <h2 class="main-title">{{ sectionTitle }}</h2>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row animated fadeIn">
+        <div class="col-lg-4" *ngFor="let item of mySkinsBalance">
+          <div class="card">
+            <div class="card-body p-0 clearfix col-12">
+              <div class="col-7 float-left p-0">
+                <i class="fa fa-laptop bg-info p-4 font-2xl mr-3 float-left"></i>
+                <div class="h5 text-info mb-0 pt-3">{{ item.balance | currency }}</div>
+                <div class="text-muted text-uppercase font-weight-bold font-s float-left">{{ item.skinName }}</div>
+              </div>
+              <div class="col-5 float-right p-0 mt-4">
+                <button class="btn btn-pill btn-sm btn-success col-5 mr-2" type="button">Credit</button>
+                <button class="btn btn-pill btn-sm btn-warning col-5" type="button">Debit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--<div class="row mb-3">
+        <div class="col-md-4 offset-md-8">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control" [(ngModel)]="filter" placeholder="Search by" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8 offset-md-2">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover" [mfData]="mySkinsBalance | dataFilter : filter"
+            #mf="mfDataTable" [mfRowsOnPage]="5">
+            <thead class="thead-dark">
+              <tr>
+                <th>
+                  <mfDefaultSorter by="skinAcronym">Skin</mfDefaultSorter>
+                </th>
+                <th>
+                  <mfDefaultSorter by="balance">Balance</mfDefaultSorter>
+                </th>
+                <th>
+                  Options
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mf.data">
+                <td>{{ item.skinAcronym }}</td>
+                <td>{{ item.balance }}</td>
+                <td class="text-center">
+                  <a *ngIf="globalVarsService.displayAction('editTransactionLimit')" class="wpn-cursor"
+                    data-toggle="modal" data-target="#editModal" (click)="fillDataEdit(item);">
+                    <i class="fa fa-pencil teal-text wpn-green"></i>
+                  </a>
+                  <a *ngIf="globalVarsService.displayAction('deleteTransactionLimit')" class="ml-10 wpn-cursor"
+                    data-toggle="modal" (click)="openDeleteModel(item)">
+                    <i class="fa fa-remove teal-text wpn-red"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="11">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>-->
+<!--<div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center"><i class="fa fa-plus"></i> Create Transaction Type</h4>
+        <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="newTransactionLimitForm" novalidate class="needs-validation">
+            <div class="form-group">
+                <label for="addPaymentMethod">Payment Method</label>
+                <input formControlName="fPaymentMethod" type="text" class="form-control" id="addPaymentMethod" [(ngModel)]="newTransactionLimit.paymentMethod"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fPaymentMethod.errors, 'is-valid': fAdd.fPaymentMethod.touched && !fAdd.fPaymentMethod.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fPaymentMethod'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fPaymentMethod'].errors.required">Payment Method is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addSkinAcronym">Skin Acronym</label>
+                <select formControlName="fSkinAcronym" id="addSkinAcronym" name="select1" class="form-control"  [(ngModel)]="newTransactionLimit.skinAcronym"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fSkinAcronym.errors, 'is-valid': fAdd.fSkinAcronym.touched && !fAdd.fSkinAcronym.errors }">
+                  <option *ngFor="let skin of allSkins" value="{{ skin.acronym }}">{{ skin.name }} </option>
+                </select>
+                <div *ngIf="submittedAdd && fAdd['fSkinAcronym'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fSkinAcronym'].errors.required">Skin Acronym is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addDailyLimitCredits">Daily Limit Credits</label>
+                <input formControlName="fDailyLimitCredits" type="number" class="form-control" id="addDailyLimitCredits" [(ngModel)]="newTransactionLimit.dailyLimitCredits"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fDailyLimitCredits.errors, 'is-valid': fAdd.fDailyLimitCredits.touched && !fAdd.fDailyLimitCredits.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fDailyLimitCredits'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fDailyLimitCredits'].errors.required">Daily Limit Credits is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addDailyLimitDebits">Daily Limit Debits</label>
+                <input formControlName="fDailyLimitDebits" type="number" class="form-control" id="addDailyLimitDebits" [(ngModel)]="newTransactionLimit.dailyLimitDebits"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fDailyLimitDebits.errors, 'is-valid': fAdd.fDailyLimitDebits.touched && !fAdd.fDailyLimitDebits.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fDailyLimitDebits'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fDailyLimitDebits'].errors.required">Daily Limit Debits is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addWeeklyLimitCredits">Weekly Limit Credits</label>
+                <input formControlName="fWeeklyLimitCredits" type="number" class="form-control" id="addWeeklyLimitCredits" [(ngModel)]="newTransactionLimit.weeklyLimitCredits"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fWeeklyLimitCredits.errors, 'is-valid': fAdd.fWeeklyLimitCredits.touched && !fAdd.fWeeklyLimitCredits.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fWeeklyLimitCredits'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fWeeklyLimitCredits'].errors.required">Payment Method is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addWeeklyLimitDebits">Weekly Limit Debits</label>
+                <input formControlName="fWeeklyLimitDebits" type="number" class="form-control" id="addWeeklyLimitDebits" [(ngModel)]="newTransactionLimit.weeklyLimitDebits"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fWeeklyLimitDebits.errors, 'is-valid': fAdd.fWeeklyLimitDebits.touched && !fAdd.fWeeklyLimitDebits.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fWeeklyLimitDebits'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fWeeklyLimitDebits'].errors.required">Weekly Limit Debits is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addMonthlyLimitCredits">Monthly Limit Credits</label>
+                <input formControlName="fMonthlyLimitCredits" type="number" class="form-control" id="addMonthlyLimitCredits" [(ngModel)]="newTransactionLimit.monthlyLimitCredits"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fMonthlyLimitCredits.errors, 'is-valid': fAdd.fMonthlyLimitCredits.touched && !fAdd.fMonthlyLimitCredits.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fMonthlyLimitCredits'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fMonthlyLimitCredits'].errors.required">Monthly Limit Credits is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addMonthlyLimitDebits">Monthly Limit Debits</label>
+                <input formControlName="fMonthlyLimitDebits" type="number" class="form-control" id="addMonthlyLimitDebits" [(ngModel)]="newTransactionLimit.monthlyLimitDebits"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fMonthlyLimitDebits.errors, 'is-valid': fAdd.fMonthlyLimitDebits.touched && !fAdd.fMonthlyLimitDebits.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fMonthlyLimitDebits'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fMonthlyLimitDebits'].errors.required">Monthly Limit Debits is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addTransactionLimitMin">Transaction Limit Min</label>
+                <input formControlName="fTransactionLimitMin" type="number" class="form-control" id="addTransactionLimitMin" [(ngModel)]="newTransactionLimit.transactionLimitMin"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fTransactionLimitMin.errors, 'is-valid': fAdd.fTransactionLimitMin.touched && !fAdd.fTransactionLimitMin.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fTransactionLimitMin'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fTransactionLimitMin'].errors.required">Transaction Limit Min is required</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="addTransactionLimitMax">Transaction Limit Max</label>
+                <input formControlName="fTransactionLimitMax" type="number" class="form-control" id="addTransactionLimitMax" [(ngModel)]="newTransactionLimit.transactionLimitMax"
+                [ngClass]="{ 'is-invalid': submittedAdd && fAdd.fTransactionLimitMax.errors, 'is-valid': fAdd.fTransactionLimitMax.touched && !fAdd.fTransactionLimitMax.errors }" />
+                <div *ngIf="submittedAdd && fAdd['fTransactionLimitMax'].errors" class="invalid-feedback">
+                    <div *ngIf="fAdd['fTransactionLimitMax'].errors.required">Transaction Limit Max is required</div>
+                </div>
+            </div>
+        </form>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="addModal.hide()">Close</button>
+          <button type="submit" class="btn btn-primary" (click)="save()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-primary" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title text-center"><i class="fa fa-pencil"></i> Edit Transaction Type</h4>
+      <button type="button" class="close" (click)="editModal.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="editTransactionLimitForm" novalidate class="needs-validation">
+        <div class="form-group">
+          <label for="editPaymentMethod">Payment Method</label>
+          <input formControlName="fPaymentMethod" type="text" class="form-control" id="editPaymentMethod" [(ngModel)]="editTransactionLimit.paymentMethod"
+          [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fPaymentMethod.errors, 'is-valid': fEdit.fPaymentMethod.touched && !fEdit.fPaymentMethod.errors }" />
+          <div *ngIf="submittedEdit && fEdit['fPaymentMethod'].errors" class="invalid-feedback">
+            <div *ngIf="fEdit['fPaymentMethod'].errors.required">Payment Method is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editSkinAcronym">Skin Acronym</label>
+          <select formControlName="fSkinAcronym" id="editSkinAcronym" name="select1" class="form-control"  [(ngModel)]="editTransactionLimit.skinAcronym"
+          [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fSkinAcronym.errors, 'is-valid': fEdit.fSkinAcronym.touched && !fEdit.fSkinAcronym.errors }">
+            <option *ngFor="let skin of allSkins" value="{{ skin.acronym }}">{{ skin.name }} </option>
+          </select>
+          <div *ngIf="submittedEdit && fEdit['fSkinAcronym'].errors" class="invalid-feedback">
+            <div *ngIf="fEdit['fSkinAcronym'].errors.required">Skin Acronym is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editDailyLimitCredits">Daily Limit Credits</label>
+          <input formControlName="fDailyLimitCredits" type="number" class="form-control" id="editDailyLimitCredits" [(ngModel)]="editTransactionLimit.dailyLimitCredits"
+          [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fDailyLimitCredits.errors, 'is-valid': fEdit.fDailyLimitCredits.touched && !fEdit.fDailyLimitCredits.errors }" />
+          <div *ngIf="submittedEdit && fEdit['fDailyLimitCredits'].errors" class="invalid-feedback">
+            <div *ngIf="fEdit['fDailyLimitCredits'].errors.required">Daily Limit Credits is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editDailyLimitDebits">Daily Limit Debits</label>
+          <input formControlName="fDailyLimitDebits" type="number" class="form-control" id="editDailyLimitDebits" [(ngModel)]="editTransactionLimit.dailyLimitDebits"
+          [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fDailyLimitDebits.errors, 'is-valid': fEdit.fDailyLimitDebits.touched && !fEdit.fDailyLimitDebits.errors }" />
+          <div *ngIf="submittedEdit && fEdit['fDailyLimitDebits'].errors" class="invalid-feedback">
+            <div *ngIf="fEdit['fDailyLimitDebits'].errors.required">Daily Limit Debits is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editWeeklyLimitCredits">Weekly Limit Credits</label>
+          <input formControlName="fWeeklyLimitCredits" type="number" class="form-control" id="editWeeklyLimitCredits" [(ngModel)]="editTransactionLimit.weeklyLimitCredits"
+          [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fWeeklyLimitCredits.errors, 'is-valid': fEdit.fWeeklyLimitCredits.touched && !fEdit.fWeeklyLimitCredits.errors }" />
+          <div *ngIf="submittedEdit && fEdit['fWeeklyLimitCredits'].errors" class="invalid-feedback">
+            <div *ngIf="fEdit['fWeeklyLimitCredits'].errors.required">Payment Method is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editWeeklyLimitDebits">Weekly Limit Debits</label>
+          <input formControlName="fWeeklyLimitDebits" type="number" class="form-control" id="editWeeklyLimitDebits" [(ngModel)]="editTransactionLimit.weeklyLimitDebits"
+          [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fWeeklyLimitDebits.errors, 'is-valid': fEdit.fWeeklyLimitDebits.touched && !fEdit.fWeeklyLimitDebits.errors }" />
+          <div *ngIf="submittedEdit && fEdit['fWeeklyLimitDebits'].errors" class="invalid-feedback">
+            <div *ngIf="fEdit['fWeeklyLimitDebits'].errors.required">Weekly Limit Debits is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+            <label for="editMonthlyLimitCredits">Monthly Limit Credits</label>
+            <input formControlName="fMonthlyLimitCredits" type="number" class="form-control" id="editMonthlyLimitCredits" [(ngModel)]="editTransactionLimit.monthlyLimitCredits"
+            [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fMonthlyLimitCredits.errors, 'is-valid': fEdit.fMonthlyLimitCredits.touched && !fEdit.fMonthlyLimitCredits.errors }" />
+            <div *ngIf="submittedEdit && fEdit['fMonthlyLimitCredits'].errors" class="invalid-feedback">
+              <div *ngIf="fEdit['fMonthlyLimitCredits'].errors.required">Monthly Limit Credits is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editMonthlyLimitDebits">Monthly Limit Debits</label>
+            <input formControlName="fMonthlyLimitDebits" type="number" class="form-control" id="editMonthlyLimitDebits" [(ngModel)]="editTransactionLimit.monthlyLimitDebits"
+            [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fMonthlyLimitDebits.errors, 'is-valid': fEdit.fMonthlyLimitDebits.touched && !fEdit.fMonthlyLimitDebits.errors }" />
+            <div *ngIf="submittedEdit && fEdit['fMonthlyLimitDebits'].errors" class="invalid-feedback">
+              <div *ngIf="fEdit['fMonthlyLimitDebits'].errors.required">Monthly Limit Debits is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editTransactionLimitMin">Transaction Limit Min</label>
+            <input formControlName="fTransactionLimitMin" type="number" class="form-control" id="editTransactionLimitMin" [(ngModel)]="editTransactionLimit.transactionLimitMin"
+            [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fTransactionLimitMin.errors, 'is-valid': fEdit.fTransactionLimitMin.touched && !fEdit.fTransactionLimitMin.errors }" />
+            <div *ngIf="submittedEdit && fEdit['fTransactionLimitMin'].errors" class="invalid-feedback">
+              <div *ngIf="fEdit['fTransactionLimitMin'].errors.required">Transaction Limit Min is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editTransactionLimitMax">Transaction Limit Max</label>
+            <input formControlName="fTransactionLimitMax" type="number" class="form-control" id="editTransactionLimitMax" [(ngModel)]="editTransactionLimit.transactionLimitMax"
+            [ngClass]="{ 'is-invalid': submittedEdit && fEdit.fTransactionLimitMax.errors, 'is-valid': fEdit.fTransactionLimitMax.touched && !fEdit.fTransactionLimitMax.errors }" />
+            <div *ngIf="submittedEdit && fEdit['fTransactionLimitMax'].errors" class="invalid-feedback">
+              <div *ngIf="fEdit['fTransactionLimitMax'].errors.required">Transaction Limit Max is required</div>
+            </div>
+          </div>
+      </form>
+      <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="editModal.hide()">Close</button>
+      <button type="submit" class="btn btn-primary" (click)="edit()">Save changes</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+<div bsModal #deleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirm Delete</h4>
+        <button type="button" class="close" (click)="deleteModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>You are about to delete this transaction limit, this procedure is irreversible.</p>
+        <p>Do you want to proceed?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="deleteModal.hide()">No</button>
+        <button type="button" class="btn btn-primary" (click)="delete(deleteTransactionLimit)">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>-->
