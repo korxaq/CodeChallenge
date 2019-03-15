@@ -18,12 +18,16 @@ namespace CodeChallenge.DAL.Context
         public DbSet<Project> Projects { get; set; }
         public DbSet<CodeChallengeUserProject> UserProjects { get; set; }
 
-        public async Task MigrateAsync()
+        public async Task DatabaseSetUp()
         {
             if (!AllMigrationsApplied(this))
             {
                 await Database.MigrateAsync();
             }
+
+            await DatabaseSeeding(@"./Data/Users.json", Users, this);
+            await DatabaseSeeding(@"./Data/Projects.json", Projects, this);
+            await DatabaseSeeding(@"./Data/User-projects.json", UserProjects, this);
         }
 
         public static async Task DatabaseSeeding<T>(string jsonPath, DbSet<T> dbSet, DbContext context) where T : class

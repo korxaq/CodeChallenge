@@ -1,0 +1,92 @@
+[
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 1,
+    "ProjectId": 4,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2019-03-01T00:00:00",
+    "UserId": 1,
+    "ProjectId": 2,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 1,
+    "ProjectId": 3,
+    "IsActive": false
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 1,
+    "ProjectId": 1,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2018-12-01T00:00:00",
+    "UserId": 1,
+    "ProjectId": 7,
+    "IsActive": false
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 2,
+    "ProjectId": 6,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2019-03-01T00:00:00",
+    "UserId": 2,
+    "ProjectId": 1,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 2,
+    "ProjectId": 3,
+    "IsActive": false
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 2,
+    "ProjectId": 7,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2018-12-01T00:00:00",
+    "UserId": 2,
+    "ProjectId": 7,
+    "IsActive": false
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 3,
+    "ProjectId": 2,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2019-03-01T00:00:00",
+    "UserId": 3,
+    "ProjectId": 3,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 3,
+    "ProjectId": 4,
+    "IsActive": false
+  },
+  {
+    "AssignedDate": "2019-01-01T00:00:00",
+    "UserId": 3,
+    "ProjectId": 7,
+    "IsActive": true
+  },
+  {
+    "AssignedDate": "2018-12-01T00:00:00",
+    "UserId": 3,
+    "ProjectId": 1,
+    "IsActive": false
+  }
+]

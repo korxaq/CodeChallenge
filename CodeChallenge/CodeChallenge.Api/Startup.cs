@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using CodeChallenge.Api.Filters;
+using CodeChallenge.Common.JsonConverter;
 using CodeChallenge.Common.MagicValues;
+using CodeChallenge.Common.Mapping;
 using CodeChallenge.DAL.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -92,13 +97,53 @@ namespace CodeChallenge.Api
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var ctx = serviceScope.ServiceProvider.GetService<CodeChallengeContext>();
-                ctx.MigrateAsync().Wait();
+                ctx.DatabaseSetUp().Wait();
             }
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
             AddAutofacRegistrations(builder);
+        }
+
+        private void AddAutofacRegistrations(ContainerBuilder builder)
+        {
+            #region BLL
+            /*builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(CreditDebitBll)))
+                .Where(t => t.Name.EndsWith("Bll"))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(TransactionTypesGateway)))
+                .Where(t => t.Name.EndsWith("Gateway"))
+                .AsImplementedInterfaces();*/
+            #endregion
+
+            #region DAL
+            //builder.RegisterType<SkinsFinancialContext>().As<SkinsFinancialContext>().InstancePerLifetimeScope();
+            builder.RegisterType<CodeChallengeContext>().As<CodeChallengeContext>().InstancePerLifetimeScope();
+
+            /*builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(SkinsTransactionHistoryRepository)))
+                .Where(t => t.Name.Contains("Repository"))
+                .AsImplementedInterfaces();*/
+            #endregion
+
+            #region COMMON
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces();
+            builder.RegisterType<HttpClient>().InstancePerLifetimeScope();
+            builder.RegisterType<GlobalExceptionFilter>().SingleInstance().AutoActivate().AsSelf();
+            builder.RegisterType<JsonConverter>().AsImplementedInterfaces().InstancePerLifetimeScope();
+
+            builder.Register(ctx =>
+            {
+                var logger = ctx.Resolve<ILogger<MappingEngine>>();
+
+                IEnumerable<Assembly> assemblies = new[]
+                {
+                    Assembly.GetExecutingAssembly()
+                };
+                return new MappingEngine(assemblies, logger);
+            }).As<IMappingEngine>().SingleInstance().AutoActivate().AsSelf();
+            #endregion
         }
     }
 }

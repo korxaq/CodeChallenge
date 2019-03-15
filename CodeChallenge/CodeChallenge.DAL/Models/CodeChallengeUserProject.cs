@@ -9,8 +9,10 @@ namespace CodeChallenge.DAL.Models
 
         [Required] public DateTime AssignedDate { get; set; }
 
+        public int UserId { get; set; }
         public CodeChallengeUser User { get; set; }
 
+        public int ProjectId { get; set; }
         public Project Project { get; set; }
     }
 }
