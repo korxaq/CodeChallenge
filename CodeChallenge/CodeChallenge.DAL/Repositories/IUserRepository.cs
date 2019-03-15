@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using CodeChallenge.Common.Dto;
 
-namespace CodeChallenge.BLL
+namespace CodeChallenge.DAL.Repositories
 {
-    public interface IUserProjectsBll
+    public interface IUserRepository
     {
         Task<List<UserDto>> GetAllUsersAsync();
-        Task<List<UserProjectCalculatedDto>> GetAllUserProjectsCalculatedAsync(int userId);
     }
 }

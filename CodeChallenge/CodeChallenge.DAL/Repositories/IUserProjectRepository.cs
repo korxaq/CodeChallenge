@@ -6,8 +6,8 @@ using CodeChallenge.Common.Dto;
 
 namespace CodeChallenge.DAL.Repositories
 {
-    public interface ICodeChallengeUserRepository
+    public interface IUserProjectRepository
     {
-        Task<List<CodeChallengeUserDto>> GetAllUsersAsync();
+        Task<List<UserProjectDto>> GetAllUserProjectsByUserIdAsync(int userId);
     }
 }

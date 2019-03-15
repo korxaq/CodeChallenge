@@ -14,9 +14,9 @@ namespace CodeChallenge.DAL.Context
     {
         public CodeChallengeContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<CodeChallengeUser> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<CodeChallengeUserProject> UserProjects { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
 
         public async Task DatabaseSetUp()
         {

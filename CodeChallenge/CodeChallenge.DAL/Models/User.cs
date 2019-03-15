@@ -2,7 +2,7 @@
 
 namespace CodeChallenge.DAL.Models
 {
-    public class CodeChallengeUser : BaseEntity<int>
+    public class User : BaseEntity<int>
     {
         [Required] [MaxLength(50)] public string FirstName { get; set; }
 

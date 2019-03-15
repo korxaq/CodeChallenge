@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -15,15 +14,11 @@ using CodeChallenge.Common.Mapping;
 using CodeChallenge.DAL.Context;
 using CodeChallenge.DAL.Repositories;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace CodeChallenge.Api
 {
@@ -120,7 +115,7 @@ namespace CodeChallenge.Api
             #region DAL
             builder.RegisterType<CodeChallengeContext>().As<CodeChallengeContext>().InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(CodeChallengeUserRepository)))
+            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(UserRepository)))
                 .Where(t => t.Name.Contains("Repository"))
                 .AsImplementedInterfaces();
             #endregion
@@ -137,7 +132,8 @@ namespace CodeChallenge.Api
 
                 IEnumerable<Assembly> assemblies = new[]
                 {
-                    Assembly.GetExecutingAssembly()
+                    Assembly.GetExecutingAssembly(),
+                    Assembly.GetAssembly(typeof(UserProjectsBll)),
                 };
                 return new MappingEngine(assemblies, logger);
             }).As<IMappingEngine>().SingleInstance().AutoActivate().AsSelf();
