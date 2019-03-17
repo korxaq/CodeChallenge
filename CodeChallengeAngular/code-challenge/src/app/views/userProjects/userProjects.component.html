@@ -1,0 +1,53 @@
+<div class="container-fluid mt-10">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="main-title text-center">{{ sectionTitle }}</h2>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <label for="ddUsers">Username </label>
+        <select id="ddUsers" name="ddUsers" class="form-control" [(ngModel)]="userSelected"
+          (change)="getUserProjects($event.target.value)" placeholder="...">
+          <option *ngFor="let user of users" value="{{ user.id }}">{{ user.firstName + ' ' + user.lastName }} </option>
+        </select>
+      </div>
+      <div class="row" *ngIf="userProjects">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th class="column-title">
+                Project ID
+              </th>
+              <th class="column-title">
+                Start Date
+              </th>
+              <th class="column-title">
+                Time To Start
+              </th>
+              <th class="column-title">
+                End Date
+              </th>
+              <th class="column-title">
+                Credits
+              </th>
+              <th class="column-title">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let project of userProjects">
+              <td class="pt-2 pb-2 align-middle trTable">{{ project.projectId }}</td>
+              <td class="pt-2 pb-2 align-middle trTable">{{ project.startDate | date:'medium' }}</td>
+              <td class="pt-2 pb-2 align-middle trTable">{{ project.timeToStart }}</td>
+              <td class="pt-2 pb-2 align-middle trTable">{{ project.endDate | date:'medium' }}</td>
+              <td class="pt-2 pb-2 align-middle trTable">{{ project.credits }}</td>
+              <td class="pt-2 pb-2 align-middle trTable">{{ project.status }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="error">{{ errorMessage }}</div>
+    </div>
+  </div>
+</div>

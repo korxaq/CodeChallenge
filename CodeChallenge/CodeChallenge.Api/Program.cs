@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace CodeChallenge.Api
@@ -14,11 +11,35 @@ namespace CodeChallenge.Api
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = BuildWebHost(args);
+
+            using (var scope = host.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    host.Run();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex.Message);
+                    logger.LogError(ex.StackTrace);
+                }
+            }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                .ConfigureServices(s =>
+                {
+                    s.AddAutofac();
+                })
+                .ConfigureLogging((hostingContext, logging) =>
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging")
+                    ))
+                .UseStartup<Startup>()
+                .Build();
     }
 }
