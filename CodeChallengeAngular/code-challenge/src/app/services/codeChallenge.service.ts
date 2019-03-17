@@ -39,4 +39,21 @@ export class CodeChallengeService {
         return observable;
     }
 
+    getUserProjects(userId:number): Observable<Array<UserProjectCalculated>> {
+        const getUsersProjectsEndpoint = this.codeChallengeEndpoint + '/UserProjects' + '/' + userId;
+        const observable = new Observable<Array<UserProjectCalculated>>(observer => {
+            this.http.get<Array<UserProjectCalculated>>(getUsersProjectsEndpoint, { headers: this.headers }).subscribe(
+                response => {
+                    observer.next(response);
+                    observer.complete();
+                },
+                error => {
+                    observer.error(error);
+                }
+            )
+        });
+
+        return observable;
+    }
+
 }
